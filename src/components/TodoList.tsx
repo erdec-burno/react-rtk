@@ -1,26 +1,39 @@
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { toggleCompleteTodo, removeTodo } from "../store/todoSlice";
+import {
+  toggleCompleteTodoThunk,
+  removeTodoThunk,
+  getTodosThunk
+} from "../store/todoSlice";
 
 const TodoList = () => {
-  const todos = useSelector((state: RootState) => state.todosData.todos);
+  const { todos, isLoading } = useSelector(
+    (state: RootState) => state.todosData
+  );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getTodosThunk());
+  }, [dispatch]);
 
   return (
     <>
       {todos.length ? "" : "нет данных..."}
-      <ul>
+      <ul style={{ opacity: isLoading ? "0.5" : "1" }}>
         {todos.map((todo) => (
           <li key={todo.id}>
             <input
               type="checkbox"
               checked={todo.completed}
-              onChange={() => dispatch(toggleCompleteTodo(todo.id))}
+              onChange={() => dispatch(toggleCompleteTodoThunk(todo))}
             />
             <span>
-            {todo.title} - {!!todo.completed}
-          </span>
-            <span onClick={() => dispatch(removeTodo(todo.id))}>&times;</span>
+              {todo.title} - {!!todo.completed}
+            </span>
+            <span onClick={() => dispatch(removeTodoThunk(todo.id))}>
+              &times;
+            </span>
           </li>
         ))}
       </ul>
