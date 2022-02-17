@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import {todosEntities} from "../store/todoSelector";
 
 const Header = () => {
-  const todos = useSelector((state: RootState) => state.todosData.todos);
+  const todos = useSelector(todosEntities);
   const count = todos.length;
   const completed = todos.filter((todo) => todo.completed).length;
 

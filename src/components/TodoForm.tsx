@@ -8,7 +8,13 @@ const TodoForm = () => {
 
   const handleAction = () => {
     if (text.trim().length) {
-      dispatch(addTodo(text));
+      const formData = {
+        userId: 1,
+        id: Math.floor(Math.random() * 100),
+        title: text,
+        completed: false
+      };
+      dispatch(addTodo(formData));
       setText("");
     }
   };

@@ -6,11 +6,13 @@ import {
   removeTodoThunk,
   getTodosThunk
 } from "../store/todoSlice";
+import {todosEntities} from "../store/todoSelector";
 
 const TodoList = () => {
-  const { todos, isLoading } = useSelector(
+  const { isLoading } = useSelector(
     (state: RootState) => state.todosData
   );
+  const todos = useSelector(todosEntities);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const TodoList = () => {
               onChange={() => dispatch(toggleCompleteTodoThunk(todo))}
             />
             <span>
-              {todo.title} - {!!todo.completed}
+              {todo.title}
             </span>
             <span onClick={() => dispatch(removeTodoThunk(todo.id))}>
               &times;

@@ -1,10 +1,13 @@
-import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createEntityAdapter, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ITodo} from "../api/dto/ITodo";
 
-const initialState: { todos: ITodo[]; isLoading: boolean } = {
+export const todosAdapter = createEntityAdapter<ITodo>();
+
+/*const initialState: { todos: ITodo[]; isLoading: boolean } = {
     todos: [],
     isLoading: false
-};
+};*/
+const initialState = todosAdapter.getInitialState<{ isLoading: boolean }>({ isLoading: false });
 
 export const getTodosThunk = createAsyncThunk<ITodo[]>(
   "todos/getTodos",
@@ -49,12 +52,9 @@ const todoSlice = createSlice({
     name: "todosData",
     initialState,
     reducers: {
-        addTodo(state, action: PayloadAction<string>) {
-            state.todos.push({
-                id: Math.random() * 100,
-                title: action.payload,
-                completed: false
-            });
+        addTodo(state, {payload}: PayloadAction<ITodo>) {
+          state.ids.unshift(payload.id);
+          state.entities[payload.id] = payload;
         }
     },
     extraReducers: {
@@ -62,7 +62,7 @@ const todoSlice = createSlice({
           state,
           { payload }: PayloadAction<ITodo[]>
         ) => {
-            state.todos = payload;
+            todosAdapter.setAll(state, payload);
         },
         [removeTodoThunk.pending.type]: (state) => {
             state.isLoading = true;
@@ -71,7 +71,7 @@ const todoSlice = createSlice({
           state,
           { payload }: PayloadAction<number>
         ) => {
-            state.todos = state.todos.filter((todo) => todo.id !== payload);
+            todosAdapter.removeOne(state, payload);
             state.isLoading = false;
         },
         [removeTodoThunk.rejected.type]: (state) => {},
@@ -82,10 +82,7 @@ const todoSlice = createSlice({
           state,
           { payload }: PayloadAction<ITodo>
         ) => {
-            const toggledTodo = state.todos.find((todo) => todo.id === payload.id);
-            if (toggledTodo) {
-              toggledTodo.completed = !toggledTodo.completed;
-            }
+            todosAdapter.updateOne(state, { id: payload.id, changes: payload})
             state.isLoading = false;
         }
     }
