@@ -1,7 +1,9 @@
 import {createAsyncThunk, createEntityAdapter, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {ITodo} from "../api/dto/ITodo";
 
-export const todosAdapter = createEntityAdapter<ITodo>();
+export const todosAdapter = createEntityAdapter<ITodo>({
+    sortComparer: (a, b) => a.title.localeCompare(b.title),
+});
 
 /*const initialState: { todos: ITodo[]; isLoading: boolean } = {
     todos: [],
