@@ -21,10 +21,16 @@ const todoSlice = createSlice({
         },
         removeTodo(state, action) {
             state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+        },
+        clearTodos(state) {
+            state.todos = [];
+        },
+        sortTodos(state) {
+            state.todos = state.todos.sort((a, b) => +b.completed - +a.completed);
         }
     }
 });
 
-export const { addTodo, toggleCompleteTodo, removeTodo } = todoSlice.actions;
+export const { addTodo, toggleCompleteTodo, removeTodo, clearTodos, sortTodos } = todoSlice.actions;
 
 export default todoSlice.reducer;

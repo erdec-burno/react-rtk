@@ -17,9 +17,7 @@ const TodoList = () => {
               checked={todo.completed}
               onChange={() => dispatch(toggleCompleteTodo(todo.id))}
             />
-            <span>
-            {todo.title} - {!!todo.completed}
-          </span>
+            <span>{todo.title}</span>
             <span onClick={() => dispatch(removeTodo(todo.id))}>&times;</span>
           </li>
         ))}
