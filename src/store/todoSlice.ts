@@ -19,12 +19,13 @@ export const getTodosThunk = createAsyncThunk<ITodo[]>(
 
 export const removeTodoThunk = createAsyncThunk(
   "todos/deleteTodo",
-  async (id: number) => {
+  async (id: number, thunkApi) => {
       await fetch("https://jsonplaceholder.typicode.com/todos/" + id, {
           method: "DELETE"
       });
+      thunkApi.dispatch(clearTodo(id));
 
-      return id;
+      // return id;
   }
 );
 
@@ -52,6 +53,15 @@ const todoSlice = createSlice({
         addTodo(state, action: PayloadAction<ITodo>) {
             state.todos.push(action.payload);
         },
+        clearTodos(state) {
+            state.todos = [];
+        },
+        sortTodos(state) {
+            state.todos = state.todos.sort((a, b) => +b.completed - +a.completed);
+        },
+        clearTodo(state, action: PayloadAction<number>) {
+            state.todos = state.todos.filter((todo) => todo.id !== action.payload);
+        }
     },
     extraReducers: {
         [getTodosThunk.fulfilled.type]: (
@@ -67,10 +77,10 @@ const todoSlice = createSlice({
           state,
           { payload }: PayloadAction<number>
         ) => {
-            state.todos = state.todos.filter((todo) => todo.id !== payload);
+            // state.todos = state.todos.filter((todo) => todo.id !== payload);
             state.isLoading = false;
         },
-        [removeTodoThunk.rejected.type]: (state) => {},
+        [removeTodoThunk.rejected.type]: () => {},
         [toggleCompleteTodoThunk.pending.type]: (state) => {
             state.isLoading = true;
         },
@@ -87,6 +97,6 @@ const todoSlice = createSlice({
     }
 });
 
-export const { addTodo } = todoSlice.actions;
+export const { addTodo, clearTodos, sortTodos, clearTodo } = todoSlice.actions;
 
 export default todoSlice.reducer;
