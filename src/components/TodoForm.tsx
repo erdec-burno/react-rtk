@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTodo } from "../store/todoSlice";
+import {addTodo, clearTodos, sortTodos} from "../store/todoSlice";
+
+let id = 100;
 
 const TodoForm = () => {
   const [text, setText] = useState("");
@@ -10,7 +12,7 @@ const TodoForm = () => {
     if (text.trim().length) {
       const formData = {
         userId: 1,
-        id: Math.floor(Math.random() * 100),
+        id: id++,
         title: text,
         completed: false
       };
@@ -18,10 +20,21 @@ const TodoForm = () => {
       setText("");
     }
   };
+
+  const handleSort = () => {
+    dispatch(sortTodos());
+  };
+
+  const clear = () => {
+    dispatch(clearTodos());
+  };
+
   return (
     <div className="forma">
       <input value={text} onChange={(e) => setText(e.target.value)} />
       <button onClick={handleAction}>Добавить</button>
+      <button onClick={handleSort}>Сортировать</button>
+      <button onClick={clear}>Очистить</button>
     </div>
   );
 };
