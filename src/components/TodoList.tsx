@@ -29,7 +29,7 @@ const TodoList = () => {
               onChange={() => dispatch(toggleCompleteTodoThunk(todo))}
             />
             <span>
-              {todo.title} - {!!todo.completed}
+              {todo.title}
             </span>
             <span onClick={() => dispatch(removeTodoThunk(todo.id))}>
               &times;
