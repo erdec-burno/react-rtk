@@ -57,6 +57,9 @@ const todoSlice = createSlice({
         addTodo(state, {payload}: PayloadAction<ITodo>) {
           state.ids.unshift(payload.id);
           state.entities[payload.id] = payload;
+        },
+        clearTodos(state) {
+            todosAdapter.removeAll(state);
         }
     },
     extraReducers: {
@@ -90,6 +93,6 @@ const todoSlice = createSlice({
     }
 });
 
-export const { addTodo } = todoSlice.actions;
+export const { addTodo, clearTodos } = todoSlice.actions;
 
 export default todoSlice.reducer;
