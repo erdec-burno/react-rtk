@@ -1,24 +1,18 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {addTodo, clearTodos, sortTodos} from "../store/todoSlice";
+import {addTodo, clearTodos, getTodosThunk, sortTodos} from "../store/todoSlice";
 
 let id = 100;
 
 const TodoForm = () => {
   const [text, setText] = useState("");
+  const [limit, setLimit] = useState(10);
+
   const dispatch = useDispatch();
 
   const handleAction = () => {
-    if (text.trim().length) {
-      const formData = {
-        userId: 1,
-        id: id++,
-        title: text,
-        completed: false
-      };
-      dispatch(addTodo(formData));
-      setText("");
-    }
+    setLimit(limit + 10);
+    dispatch(getTodosThunk(limit));
   };
 
   const handleSort = () => {

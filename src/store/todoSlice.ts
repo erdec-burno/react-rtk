@@ -6,11 +6,11 @@ const initialState: { todos: ITodo[]; isLoading: boolean } = {
     isLoading: false
 };
 
-export const getTodosThunk = createAsyncThunk<ITodo[]>(
+export const getTodosThunk = createAsyncThunk(
   "todos/getTodos",
-  async () => {
+  async (limit: number) => {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/todos?_limit=10"
+        "https://jsonplaceholder.typicode.com/todos?_limit=" + limit
       );
 
       return await response.json();
